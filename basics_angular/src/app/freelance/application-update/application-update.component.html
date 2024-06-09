@@ -1,0 +1,206 @@
+<!--  -->
+
+<app-loading-spinner *ngIf="spinnerOn"></app-loading-spinner>
+<div class="container p-4" *ngIf="applicationModel != null && !spinnerOn">
+  <div class="card text-white bg-dark">
+    <div class="card card-header text-white mx-auto">
+      <h5>Update Application</h5>
+    </div>
+    <div class="card-header">
+      <h6>
+        <a
+          [routerLink]="['/gigs/applications', applicationModel.id]"
+          class="d-inline-flex justify-content-between align-items-center"
+        >
+          <i
+            class="fas fa-file-alt me-3 link link-danger link-offset-1-hover"
+            style="font-size: 2.1em"
+          >
+          </i>
+        </a>
+        <a
+          [href]="
+            applicationModel.freelancerProfile
+              ? 'https://' + applicationModel.freelancerProfile
+              : '#'
+          "
+          target="_blank"
+          [ngClass]="{ 'disabled-link': !!applicationModel.freelancerProfile }"
+          class="d-inline-flex justify-content-between align-items-center link-underline-light"
+        >
+          <b class="fs-5">{{
+            (applicationModel.ownerName | titlecase) ??
+              "Freelancer Relevent Profile"
+          }}</b>
+        </a>
+        <i
+          *ngIf="applicationModel.applicationWon"
+          class="fa fa-trophy ms-3 fa-sm justify-content-end"
+          style="font-size: 1.3em; color: gold"
+          aria-hidden="true"
+        ></i>
+      </h6>
+    </div>
+    <div class="card-body">
+      <!-- row-of attribute -->
+      <div class="d-grid">
+        <span class="d-grid me-3">
+          <h6>
+            Description:
+            <span class="badge bg-danger ms-2">
+              {{
+                "Bid Price: " +
+                  (applicationModel.bid | currency : "USD" : "symbol" : "1.0-0")
+              }}
+              {{
+                " - Extra Cost: " +
+                  (applicationModel.extraCost
+                    ? (applicationModel.extraCost | currency : "USD" : "symbol")
+                    : (0 | currency : "USD" : "symbol" : "1.0-0"))
+              }}</span
+            >
+          </h6>
+          <p class="fs-6 ms-4">
+            {{ applicationModel.description }}
+          </p>
+        </span>
+      </div>
+      <!-- Start WorkReference -->
+      <div class="d-flex">
+        <span class="me-3 flex-fill">
+          <h6 class="flex-fill">Work Reference:</h6>
+          <p class="ms-4 flex-fill">
+            <!-- loop downloadable files with span -->
+            <span
+              class="me-3 flex-fill"
+              *ngFor="let workLink of applicationModel.workReferenceLinksDto"
+              ><a href="https://{{ workLink }}" target="_blank">
+                {{ workLink }}
+              </a></span
+            >
+          </p>
+        </span>
+      </div>
+      <!-- End WorkReference -->
+      <div>
+        <!-- end row-2Colum-of attribute -->
+        <!-- 2nd row-of attribute -->
+
+        <div class="d-grid">
+          <h6 class="flex-fill">WalletId:</h6>
+          <p class="ms-4">
+            {{ applicationModel.walletId }}
+          </p>
+        </div>
+      </div>
+      <div class="d-grid">
+        <h6 class="flex-fill">Questions:</h6>
+        <p class="ms-4">
+          {{ applicationModel.questions }}
+        </p>
+      </div>
+      <ng-container *ngIf="applicationModel.ownerId === currentUserId">
+        <div class="card card-header bg-black">
+          <b>Updatable Fields</b>
+        </div>
+        <div class="card card-body bg-black justify-content-center">
+          <div class="mb-3">
+            <!-- Show Files -->
+            <div class="d-flex">
+              <span class="me-3 flex-fill">
+                <h6 class="flex-fill">Files:</h6>
+                <p class="ms-4 flex-fill">
+                  <!-- loop downloadable files with span -->
+                  <span
+                    class="me-3 d-flex align-items-center"
+                    *ngFor="let file of applicationModel.files"
+                  >
+                    <!-- file deleting  trash -->
+                    <i
+                      *ngIf="!applicationModel.applicationWon"
+                      class="fa fa-trash me-1 btn btn-link me-"
+                      aria-hidden="true"
+                      (click)="deleteFile(file.id!, applicationModel.files!)"
+                    >
+                    </i>
+                    <!--  -->
+                    <a
+                      href="{{ urlApiDownload + file.path }}"
+                      target="_blank"
+                      class="link-info"
+                    >
+                      {{
+                        (file.name ? file.name + "." : "") +
+                          (file.extension ? file.extension : "")
+                      }}
+                    </a>
+                  </span>
+                </p>
+              </span>
+            </div>
+            <!-- end Show files -->
+          </div>
+
+          <form [formGroup]="updateApplicationForm">
+            <div class="mb-3 mt-3">
+              <div class="form-label">Update Bid Amount</div>
+              <app-input
+                typeInput="number"
+                placeholderString="Update Biding Amount"
+                [control]="bid"
+              ></app-input>
+            </div>
+
+            <div class="mb-3 mt-3">
+              <div class="form-label">Update Extra Cost Amount</div>
+              <app-input
+                typeInput="number"
+                placeholderString="Extra Cost Expenses"
+                [control]="extraCost"
+              ></app-input>
+            </div>
+            <div class="mb-3 mt-3">
+              <div class="form-label">Update WalletId</div>
+              <app-input
+                typeInput="text"
+                placeholderString="update or add WalletId"
+                [control]="walletId"
+              ></app-input>
+            </div>
+
+            <div class="mb-3 mt-3">
+              <label class="form-label">Add extra Relevent Files </label>
+              <app-input
+                id="filesupload"
+                typeInput="file"
+                [isMultiple]="true"
+                placeholderString="Ensert Relevent Project Files (templates, architecture , etc ...)"
+                [control]="filesControl"
+                (change)="selectFile($event)"
+              >
+              </app-input>
+            </div>
+            <hr class="border-3" />
+
+            <div class="card-footer d-flex text-white">
+              <button
+                class="btn btn-dark btn-outline-light btn-sm me-2 flex-fill"
+                type="submit"
+                (click)="submitForm($event)"
+              >
+                Commit Update
+              </button>
+            </div>
+            <div class="d-flex mt-2" *ngIf="msgFailDisplay !== null">
+              <div class="alert alert-info" role="alert">
+                {{ msgFailDisplay }}
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+    </div>
+
+    <!--  -->
+  </div>
+</div>

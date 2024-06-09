@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Basics</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Web Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- icons below -->
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-4dQ/xbB4Pfkj4koH/bk58w3vNl2JspN5CgFCxbRSJe0MEOw3oI3G6pTzYjm3FR8Eyv6AdeAUVk98k6DvbwilWg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    /> -->
+
+    <!-- ========================= CSS here ========================= -->
+    <!-- <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/LineIcons.2.0.css" />
+    <link rel="stylesheet" href="assets/css/animate.css" />
+    <link rel="stylesheet" href="assets/css/tiny-slider.css" />
+    <link rel="stylesheet" href="assets/css/glightbox.min.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/responsive.css" /> -->
+  </head>
+
+  <body>
+    <app-root></app-root>
+
+    <!-- ========================= JS here ========================= -->
+    <!-- <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/count-up.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/tiny-slider.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
+    <script src="assets/js/imagesloaded.min.js"></script>
+    <script src="assets/js/isotope.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script type="text/javascript">
+      //========= glightbox
+      GLightbox({
+        href: "https://www.youtube.com/watch?v=BqI0Q7e4kbk&t=1s",
+        type: "video",
+        source: "youtube", //vimeo, youtube or local
+        width: 900,
+        autoplayVideos: true,
+      });
+
+      //====== Clients Logo Slider
+      tns({
+        container: ".client-logo-carousel",
+        slideBy: "page",
+        autoplay: true,
+        autoplayButtonOutput: false,
+        mouseDrag: true,
+        gutter: 15,
+        nav: false,
+        controls: false,
+        responsive: {
+          0: {
+            items: 1,
+          },
+          540: {
+            items: 2,
+          },
+          768: {
+            items: 3,
+          },
+          992: {
+            items: 4,
+          },
+          1170: {
+            items: 6,
+          },
+        },
+      });
+
+      //======== Home Slider
+      var slider = new tns({
+        container: ".home-slider",
+        slideBy: "page",
+        autoplay: false,
+        mouseDrag: true,
+        gutter: 0,
+        items: 1,
+        nav: true,
+        controls: false,
+        controlsText: [
+          '<i class="lni lni-arrow-left prev"></i>',
+          '<i class="lni lni-arrow-right next"></i>',
+        ],
+        responsive: {
+          1200: {
+            items: 1,
+          },
+          992: {
+            items: 1,
+          },
+          0: {
+            items: 1,
+          },
+        },
+      });
+
+      //======== Testimonial Slider
+      var slider = new tns({
+        container: ".testimonial-slider",
+        slideBy: "page",
+        autoplay: false,
+        mouseDrag: true,
+        gutter: 0,
+        items: 1,
+        nav: true,
+        controls: false,
+        controlsText: [
+          '<i class="lni lni-arrow-left prev"></i>',
+          '<i class="lni lni-arrow-right next"></i>',
+        ],
+        responsive: {
+          1200: {
+            items: 2,
+          },
+          992: {
+            items: 1,
+          },
+          0: {
+            items: 1,
+          },
+        },
+      });
+
+      //============== isotope masonry js with imagesloaded
+      imagesLoaded("#container", function () {
+        var elem = document.querySelector(".grid");
+        var iso = new Isotope(elem, {
+          // options
+          itemSelector: ".grid-item",
+          masonry: {
+            // use outer width of grid-sizer for columnWidth
+            columnWidth: ".grid-item",
+          },
+        });
+
+        let filterButtons = document.querySelectorAll(
+          ".portfolio-btn-wrapper button"
+        );
+        filterButtons.forEach((e) =>
+          e.addEventListener("click", () => {
+            let filterValue = event.target.getAttribute("data-filter");
+            iso.arrange({
+              filter: filterValue,
+            });
+          })
+        );
+      });
+    </script> -->
+  </body>
+</html>

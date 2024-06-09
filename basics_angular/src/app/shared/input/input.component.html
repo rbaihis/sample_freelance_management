@@ -1,0 +1,24 @@
+<span [ngClass]="classCustom === '' ? '' : classCustom">
+  <input
+    id="{{ idInput }}"
+    [ngClass]="classCustom === '' ? 'form-control' : classCustom"
+    class="form-control"
+    placeholder="{{ placeholderString }}"
+    type="{{ typeInput }}"
+    value="{{ valueData }}"
+    name="{{ nameInput }}"
+    [formControl]="control"
+    [attr.multiple]="isMultiple ? true : null"
+  />
+  <ng-content class=""></ng-content>
+</span>
+
+<ng-container *ngIf="1 === 1 && 2 === 2">
+  <p class="bg-danger-subtle text-bg-light mt-0 mb-0" *ngIf="3 !== 3">
+    <Strong>ERROR!</Strong>validation input 1
+  </p>
+  <p class="bg-danger-subtle text-bg-light mt-0 mb-0" *ngIf="3 !== 3">
+    <Strong>ERROR!</Strong> validation input 2 long text jsfvsldkhdkf
+    vkfzhgzmfkhgms dkghzmrkghzr dfnzmghz dfzdkgh dfkzhglzm fkhdfmk
+  </p>
+</ng-container>

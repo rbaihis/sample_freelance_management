@@ -1,0 +1,225 @@
+<div class="container mt-5">
+  <div class="card bg-dark pt-2 mt-0">
+    <div class="card-title mx-auto text-white">
+      <h4>Create Your Gig Job</h4>
+    </div>
+  </div>
+
+  <hr class="border border-start border-3" />
+  <form [formGroup]="gigForm" (ngSubmit)="submitForm()">
+    <div class="mb-3 mt-3">
+      <app-input
+        typeInput="text"
+        placeholderString="Enter Title"
+        [control]="title"
+      ></app-input>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <app-text-area
+        placeholderString="Description"
+        [rowsCount]="7"
+        [control]="description"
+      >
+      </app-text-area>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <app-input
+        typeInput="number"
+        placeholderString="Min Price"
+        [control]="minPrice"
+      ></app-input>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <app-input
+        typeInput="number"
+        placeholderString="Max Price"
+        [control]="maxPrice"
+      ></app-input>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="projectstart" class="form-label">Project Start</label>
+      <app-input
+        (change)="changeDateStartGigs()"
+        idInput="projectstart"
+        typeInput="date"
+        placeholderString="Project Start Date dd/MM/yyyy"
+        [control]="projectStart"
+      ></app-input>
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="projectend" class="form-label"
+        >Project Expected End Date
+      </label>
+      <app-input
+        (change)="changeDateStartGigs()"
+        idInput="projectend"
+        typeInput="date"
+        placeholderString="Project Expected End Date dd/MM/yyyy"
+        [control]="projectDeadline"
+      ></app-input>
+    </div>
+
+    <!-- implement later -->
+    <!-- <div class="mb-3 mt-3">
+      <label for="skillselect" class="form-label">Skills Needed </label>
+      <app-select-input
+        idInput="skillselect"
+        [isMultiple]="true"
+        [optionsSelect]="skills"
+      ></app-select-input>
+      <div class="">
+        <span class="me-3">
+          Selected Skills:
+          <p class="ms-4">
+            <span
+              class="badge bg-secondary me-3 mb-1 flex-fill"
+              *ngFor="let skill of ['htm', 'css', 'js']"
+            >
+              {{ skill ? skill : "" }}
+            </span>
+          </p>
+        </span>
+      </div>
+    </div> -->
+
+    <div class="mb-3 mt-3">
+      <label for="filesuploads" class="form-label">Relevent Files</label>
+      <app-input
+        idInput="filesuploads"
+        typeInput="file"
+        placeholderString="Ensert Relevent Project Files (templates, architecture , etc ...)"
+        [isMultiple]="true"
+        [control]="files"
+        (change)="fileUpload($event)"
+      >
+      </app-input>
+    </div>
+    <div class="mb-3 mt-3">
+      <label for="walletId" class="form-label">walletId</label>
+      <app-input
+        idInput="walletId"
+        typeInput="text"
+        placeholderString="Ensert Relevent Project Files (templates, architecture , etc ...)"
+        [isMultiple]="true"
+        [control]="walletId"
+      >
+      </app-input>
+    </div>
+
+    <!-- Milestones-Start -->
+    <div class="mb-3 mt-3">
+      <div class="form-label me-2">Add a MileStone</div>
+      <div class="btn-group-sm d-inline">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm me-2 btn-light"
+          (click)="removeMilestone()"
+        >
+          <i class="fa fa-minus" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm me-2 btn-light"
+          (click)="addMilestone()"
+        >
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="card card-body" *ngIf="milestonesFormArray.length > 0">
+        <!--  -->
+        <div
+          class="card text-light bg-dark mt-3"
+          *ngFor="let milestone of milestonesFormArray.controls; let i = index"
+        >
+          <div class="card card-header">
+            <h6>Milestone {{ i }}</h6>
+          </div>
+          <div class="card card-body bg-black">
+            <div class="mb-3 mt-2">
+              <app-text-area
+                placeholderString="description of milestone tasks here ...."
+                [rowsCount]="7"
+                [control]="getFormControl(milestone.get('goalDescription')!)"
+              >
+              </app-text-area>
+            </div>
+
+            <div class="mb-3 mt-3">
+              <label for="datestart" class="form-label"
+                >Date Of Start working on this MileStone</label
+              >
+              <app-input
+                idInput="datestart"
+                typeInput="date"
+                [control]="getFormControl(milestone.get('dateStartWorking')!)"
+              ></app-input>
+            </div>
+
+            <div class="mb-3 mt-3">
+              <label id="datePayment" class="form-label text-white"
+                >Date Of Payment Transfer to Freelance of the Current MileStone
+              </label>
+              <app-input
+                idInput="datePayment"
+                typeInput="date"
+                [control]="getFormControl(milestone.get('datePayment')!)"
+              ></app-input>
+            </div>
+
+            <div class="mb-3 mt-3">
+              <label for="amountper" class="form-label"
+                >Amount Percentage Of The Milestone from The total Sum Of the
+                Project</label
+              >
+              <app-input
+                idInput="amountper"
+                typeInput="number"
+                placeholderString="Amount percentage [1-100]"
+                [control]="getFormControl(milestone.get('amountPercentage')!)"
+              ></app-input>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-3" />
+        <!--  -->
+      </div>
+    </div>
+    <!-- milestones-end -->
+
+    <div class="mb-3 mt-3 bg-secondary">
+      <input
+        type="checkbox"
+        class="ms-1 form-check-input"
+        [formControl]="policy"
+      />
+      Accept agrrement & policies
+    </div>
+    <div class="mb-5">
+      <!-- <button
+        type="button"
+        class="btn btn-success"
+        type="button"
+        (click)="submitForm($event)"
+      >
+        Submit Gig
+      </button> -->
+
+      <button
+        type="submit"
+        class="btn btn-dark"
+        data-bs-toggle="modal"
+        data-bs-target="#modalGigCreate"
+        [disabled]="!(gigForm.valid && milestonesFormArray.valid)"
+      >
+        Create Gig
+      </button>
+    </div>
+    <hr class="border border-end border-3" />
+  </form>
+</div>

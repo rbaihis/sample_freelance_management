@@ -1,0 +1,180 @@
+<!-- if nothing to display -->
+<div class="container" *ngIf="gigModel == null">
+  <ul class="list-group list-group-flush list-unstyled">
+    <li><br /></li>
+    <li class="list-group-item">
+      Nothing TO Display No Shuch A Gig exists arrow
+      <i class="fa fa-arrow-right" aria-hidden="true"></i> ERROR: Ammar 404
+    </li>
+    <li><br /><br /><br /><br /><br /><br /><br /><br /></li>
+  </ul>
+</div>
+
+<app-loading-spinner *ngIf="spinnerOn"></app-loading-spinner>
+<div class="container" *ngIf="gigModel != null && !spinnerOn">
+  <div class="card p-1 m-5 border-0">
+    <div class="card-title mx-auto text-dark align-content-center border-0">
+      <b
+        ><h4><i>UPDATE GIG</i></h4></b
+      >
+    </div>
+  </div>
+
+  <div class="card bg-dark text-white p-1 m-5">
+    <div class="d-grid card-header text-uppercase">
+      <h5 class="fs-5">
+        <a [routerLink]="['/gigs', gigModel.id]" class="link link-danger">
+          <i class="fas fa-briefcase">
+            <b class="ms-2">{{ gigModel.title }}</b>
+          </i>
+        </a>
+        <i
+          *ngIf="gigModel.gigAssigned"
+          class="fa fa-trophy ms-3 fa-sm"
+          aria-hidden="true"
+        >
+          already Assigned</i
+        >
+        <span class="d-flex justify-content-end me-3">
+          <span class="badge bg-danger ms-0 mb-1 d-flex">
+            {{ gigModel.minPrice | currency : "USD" : "symbol" : "1.0-0" }}-{{
+              gigModel.maxPrice | currency : "USD" : "symbol" : "1.0-0"
+            }}
+          </span>
+        </span>
+      </h5>
+      <div class="d-grid">
+        <span class="d-grid me-3">
+          <h6>
+            <span class="badge bg-dark ms-0 mb-1 d-flex justify-content-end">
+              Start:
+              {{ gigModel.projectStart | date : "dd/MM/yyy hh:mm " }}
+            </span>
+            <span class="badge bg-dark ms-0 mb-1 d-flex justify-content-end">
+              Deadline: <span></span>
+              {{ gigModel.projectDeadline | date : "dd/MM/yyy hh:mm " }}
+            </span>
+          </h6>
+        </span>
+      </div>
+    </div>
+    <!--  -->
+
+    <div class="card-body ms-4">
+      <!-- row-of attribute -->
+
+      <div class="d-grid">
+        <span class="d-grid me-3">
+          <h6>Description:</h6>
+          <p class="fs-6 ms-4">
+            {{ gigModel.description }}
+          </p>
+        </span>
+      </div>
+
+      <div class="">
+        <span class="me-3">
+          <h6>Skills Required:</h6>
+          <p class="ms-4">
+            <!-- LOOP sKILL WITH SPAN -->
+            <span
+              class="badge bg-secondary me-3 mb-1 flex-fill"
+              *ngFor="let skill of gigModel.skills"
+              >{{ skill.skill ? skill.skill : "" }}</span
+            >
+          </p>
+        </span>
+      </div>
+
+      <!-- added extra -ends -->
+      <form [formGroup]="gigForm">
+        <div class="me-3 flex-fill">
+          <h6 class="flex-fill">Updatable:</h6>
+        </div>
+
+        <div class="mb-3 mt-sm-3 ms-5">
+          <!-- Show Files -->
+          <div class="d-flex">
+            <span class="me-3 flex-fill">
+              <h6 class="flex-fill">Files:</h6>
+              <p class="ms-4 flex-fill">
+                <!-- loop downloadable files with span -->
+                <span
+                  class="me-3 d-flex align-items-center"
+                  *ngFor="let file of gigModel.files"
+                >
+                  <!-- file deleting  trash -->
+                  <i
+                    *ngIf="!gigModel.gigAssigned"
+                    class="fa fa-trash me-1 btn btn-link me-"
+                    aria-hidden="true"
+                    (click)="deleteFile(file.id!, gigModel.files!)"
+                  >
+                  </i>
+                  <!--  -->
+                  <a
+                    href="{{ urlApiDownload + file.path }}"
+                    target="_blank"
+                    class="link-info"
+                  >
+                    {{
+                      (file.name ? file.name + "." : "") +
+                        (file.extension ? file.extension : "")
+                    }}
+                  </a>
+                </span>
+              </p>
+            </span>
+          </div>
+          <!-- end Show files -->
+        </div>
+
+        <div class="mb-3 mt-sm-3 ms-5">
+          <label for="filesupload" class="form-label"> WalletId </label>
+          <app-input
+            typeInput="text"
+            placeholderString="Update E-Wallet Id"
+            [control]="walletId"
+            [valueData]="gigModel.walletId"
+          ></app-input>
+        </div>
+
+        <div class="mb-3 mt-3 ms-5">
+          <label for="filesupload" class="form-label"
+            >Add other Relevent Files</label
+          >
+          <app-input
+            idInput="filesupload"
+            typeInput="file"
+            placeholderString="Ensert Relevent Project Files (templates, architecture , etc ...)"
+            [isMultiple]="true"
+            (change)="selectFiles($event)"
+            [control]="filesControl"
+          >
+          </app-input>
+          <div class="progress mt-1" *ngIf="progressBar">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [ngStyle]="{ 'width.%': progressBar.progress }"
+            ></div>
+          </div>
+        </div>
+
+        <div class="d-flex text-white mt-1">
+          <button
+            [disabled]="progressBar.isDisabled || gigModel.gigAssigned"
+            class="btn btn-dark btn-outline-light btn-sm me-2 flex-fill"
+            type="submit"
+            (click)="submitForm($event)"
+          >
+            Commit Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

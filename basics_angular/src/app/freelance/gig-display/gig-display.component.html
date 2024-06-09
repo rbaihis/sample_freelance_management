@@ -1,0 +1,238 @@
+<!-- if nothing to display -->
+<div class="container" *ngIf="gigmodel == null">
+  <ul class="list-group list-group-flush list-unstyled">
+    <li><br /></li>
+    <li class="list-group-item">
+      Nothing TO Display No Shuch A Gig exists arrow
+      <i class="fa fa-arrow-right" aria-hidden="true"></i> ERROR: Ammar 404
+    </li>
+    <li><br /><br /><br /><br /><br /><br /><br /><br /></li>
+  </ul>
+</div>
+
+<ng-container *ngIf="gigmodel != null">
+  <!-- element of a list Starts here -->
+  <div class="card list-group-item border-0">
+    <div class="card-header text-uppercase border-1 mb-0">
+      <h5 class="fs-5">
+        <a [routerLink]="['/gigs', gigmodel.id]" class="link link-danger">
+          <i class="fas fa-briefcase">
+            <b class="ms-2">{{ gigmodel.title }}</b>
+          </i>
+        </a>
+        <i
+          *ngIf="gigmodel.gigAssigned"
+          class="fa fa-trophy ms-3"
+          style="color: gold; font-size: 0.5em"
+          aria-hidden="true"
+        >
+          already Assigned</i
+        >
+
+        <span class="d-flex justify-content-end me-3">
+          <span class="badge bg-danger ms-0 mb-1 d-flex">
+            {{ gigmodel.minPrice | currency : "USD" : "symbol" : "1.0-0" }}-{{
+              gigmodel.maxPrice | currency : "USD" : "symbol" : "1.0-0"
+            }}
+          </span>
+        </span>
+      </h5>
+    </div>
+    <div class="card-body mt-0">
+      <!-- row-of attribute -->
+
+      <div class="d-grid">
+        <span class="d-grid me-3">
+          <h6>
+            <span class="badge bg-dark ms-0 mb-1 d-flex justify-content-end">
+              Start:
+              {{ gigmodel.projectStart | date : "dd/MM/yyy hh:mm " }}
+            </span>
+            <span class="badge bg-dark ms-0 mb-1 d-flex justify-content-start">
+              Deadline: <span></span>
+              {{ gigmodel.projectDeadline | date : "dd/MM/yyy hh:mm " }}
+            </span>
+          </h6>
+          <h6>Description:</h6>
+          <p
+            class="fs-6 ms-4"
+            [ngClass]="{ 'text-truncate': !showDescription }"
+          >
+            {{ gigmodel.description }}
+          </p>
+        </span>
+      </div>
+
+      <div class="">
+        <span class="me-3">
+          <h6>Skills Required:</h6>
+          <p class="ms-4">
+            <!-- LOOP sKILL WITH SPAN -->
+            <span
+              class="badge bg-secondary me-3 mb-1 flex-fill"
+              *ngFor="let skill of gigmodel.skills"
+              >{{ skill.skill ? skill.skill : "" }}</span
+            >
+          </p>
+        </span>
+      </div>
+
+      <div *ngIf="showDescription">
+        <!-- Show Files -->
+        <div class="d-flex">
+          <span class="me-3 flex-fill">
+            <h6 class="flex-fill">Files:</h6>
+            <p class="ms-4 flex-fill">
+              <!-- loop downloadable files with span -->
+              <span class="me-3 flex-fill" *ngFor="let file of gigmodel.files"
+                ><a
+                  [href]="file.path ? pathToDownload + file.path : '#'"
+                  target="_blank"
+                >
+                  {{
+                    (file.name ? file.name + "." : "") +
+                      (file.extension ? file.extension : "")
+                  }}
+                </a></span
+              >
+            </p>
+          </span>
+        </div>
+        <!-- end Show files -->
+        <!-- end row-2Colum-of attribute -->
+        <!-- 2nd row-of attribute -->
+      </div>
+      <!--End Show Elements if description is true -->
+
+      <div class="d-grid">
+        <span class="d-grid me-3">
+          <h6>WalletId:</h6>
+          <p
+            class="fs-6 ms-4"
+            [ngClass]="{ 'text-truncate': !showDescription }"
+          >
+            {{ gigmodel.walletId ?? "" }}
+          </p>
+        </span>
+      </div>
+
+      <!-- milestones here  -->
+      <div class="d-flex mb-2">
+        <button
+          type="button"
+          class="btn btn-primary bg-custom-black btn-sm"
+          (click)="toggleShowMilestones()"
+        >
+          <small>
+            {{ showMilestones ? "Hide" : "Show" }} Milestones &nbsp;
+          </small>
+        </button>
+        <hr />
+        <app-milestones
+          *ngIf="showMilestones"
+          [milestones]="gigmodel.milestones ? gigmodel.milestones : []"
+        ></app-milestones>
+        <hr />
+      </div>
+      <!-- end milestones here -->
+
+      <!-- show applications -->
+      <div class="d-flex mb-2">
+        <button
+          type="button"
+          class="btn btn-primary bg-custom-black btn-sm"
+          (click)="toggleShowApplications()"
+        >
+          <small> {{ showApplications ? "Hide" : "Show" }} Applications </small>
+        </button>
+        <hr />
+        <app-applications
+          *ngIf="showApplications"
+          [gigId]="gigmodel.id"
+          [applications]="gigmodel.applications ? gigmodel.applications : []"
+        ></app-applications>
+        <hr />
+      </div>
+      <!-- end show applications -->
+
+      <!-- button div -->
+      <div class="d-flex mb-1">
+        <button
+          class="btn btn-dark btn-sm me-2 flex-fill"
+          (click)="toggleDescription()"
+        >
+          {{ showDescription ? "Hide" : "Show" }} Description
+        </button>
+      </div>
+
+      <!-- if gig have an application won do not show all below  -->
+      <ng-container *ngIf="!gigmodel.gigAssigned && !!currentUserId">
+        <div class="d-flex">
+          <button
+            *ngIf="!gigmodel.gigAssigned"
+            [disabled]="
+              this.currentUserId === this.gigmodel.ownerId ||
+              iSprojectStartDateBeforeToday
+            "
+            class="btn btn-dark btn-sm me-2 flex-fill"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#AddApplication"
+            
+          >
+            Apply
+          </button>
+        </div>
+        <!-- if gig is shown in A list view hide unrelevent options  -->
+        <ng-container *ngIf="onlyShowInComponent === true">
+          <ng-container *ngIf="this.currentUserId === this.gigmodel.ownerId">
+            <div class="d-flex text-white mt-1">
+              <button
+                [disabled]="
+                  this.gigmodel.gigAssigned || iSprojectStartDateBeforeToday
+                "
+                type="button"
+                class="btn btn-light btn-outline-dark btn-sm me-2 flex-fill"
+                [routerLink]="['/gigs', gigmodel.id, 'update']"
+              >
+                Update Gig
+              </button>
+            </div>
+            <div class="d-flex mt-2">
+              <button
+                [disabled]="this.gigmodel.gigAssigned"
+                (click)="deleteGig()"
+                type="button"
+                class="btn btn-danger btn-sm me-2 flex-fill"
+              >
+                Delete
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <div class="d-flex mt-2" *ngIf="msgFailDisplay !== null">
+        <div class="alert alert-info" role="alert">
+          {{ msgFailDisplay }}
+        </div>
+      </div>
+      <!--  -->
+    </div>
+    <!-- end Card-Body -->
+    <hr class="border-5" />
+  </div>
+  <!-- element of a list ends here  -->
+
+  <!-- This is Modal Element  -->
+  <!-- application-create composition -->
+  <app-modal modalId="AddApplication">
+    <div class="fs-4" heading>
+      <strong>Add Application</strong>
+    </div>
+
+    <app-application-create [idGig]="gigmodel.id"> </app-application-create>
+
+    <!-- <button footing class="btn btn-primary">Add Application</button> -->
+  </app-modal>
+</ng-container>

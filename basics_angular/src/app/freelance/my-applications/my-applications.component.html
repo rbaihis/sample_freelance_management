@@ -1,0 +1,18 @@
+<div class="container-md mt-5 mb-5">
+  <!-- start Row filterForm + gig -->
+  <!-- gigs Col -->
+  <div class="col">
+    <ul class="list-group list-group-flush">
+      <!-- <app-gig-element title="" description="" price=""  files="" skill="" openbtn="" applybtn="" ></app-gig-element> -->
+      <app-application-display
+        *ngFor="let application of applications"
+        [applicationModel]="application"
+        [showDetailComponent]="showDetail"
+      ></app-application-display>
+    </ul>
+  </div>
+  <!-- end gig col -->
+</div>
+<!-- end row -->
+
+<!-- end container filter + gigs -->
