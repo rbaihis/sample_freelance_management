@@ -1,0 +1,211 @@
+<!-- if nothing to display -->
+<div class="container" *ngIf="applicationModel == null">
+  <ul class="list-group list-group-flush list-unstyled">
+    <li><br /></li>
+    <li class="list-group-item">
+      Nothing TO Display No Shuch Application exists
+      <i class="fa fa-arrow-right" aria-hidden="true"></i> ERROR: Ammar 404
+    </li>
+    <li><a class="btn btn-link" routerLink="/gigs"> Return To Gigs</a></li>
+    <li><br /><br /><br /><br /><br /><br /><br /><br /></li>
+  </ul>
+</div>
+<!-- element of a list Starts here -->
+
+<app-loading-spinner *ngIf="spinnerOn"></app-loading-spinner>
+
+<div
+  class="card list-group-item border-0"
+  *ngIf="applicationModel != null && !spinnerOn"
+>
+  <div class="card-header">
+    <h6>
+      <a
+        [routerLink]="['/gigs/applications', applicationModel.id]"
+        class="d-inline-flex justify-content-between align-items-center"
+      >
+        <i
+          class="fas fa-file-alt me-3 link link-dark link-offset-1-hover"
+          style="font-size: 2.1em"
+        >
+        </i>
+      </a>
+      <a
+        [href]="
+          applicationModel.freelancerProfile
+            ? 'https://' + applicationModel.freelancerProfile
+            : '#'
+        "
+        target="_blank"
+        [ngClass]="{ 'disabled-link': !!applicationModel.freelancerProfile }"
+        class="d-inline-flex justify-content-between align-items-center link-underline-light"
+      >
+        <b class="fs-5">{{
+          (applicationModel.ownerName | titlecase) ??
+            "Freelancer Relevent Profile"
+        }}</b>
+      </a>
+      <i
+        *ngIf="applicationModel.applicationWon"
+        class="fa fa-trophy ms-3 fa-sm justify-content-end"
+        style="font-size: 1.3em; color: gold"
+        aria-hidden="true"
+      ></i>
+    </h6>
+  </div>
+  <div class="card-body">
+    <!-- row-of attribute -->
+    <div class="d-grid">
+      <span class="d-grid me-3">
+        <h6>
+          Description:
+          <span class="badge bg-danger ms-2">
+            {{
+              "Bid Price: " +
+                (applicationModel.bid | currency : "USD" : "symbol" : "1.0-0")
+            }}
+            {{
+              " - Extra Cost: " +
+                (applicationModel.extraCost
+                  ? (applicationModel.extraCost | currency : "USD" : "symbol")
+                  : (0 | currency : "USD" : "symbol" : "1.0-0"))
+            }}</span
+          >
+        </h6>
+        <p
+          class="fs-6 ms-4"
+          [ngClass]="{ 'text-truncate': !showDetailComponent }"
+        >
+          {{ applicationModel.description }}
+        </p>
+      </span>
+    </div>
+    <!-- Start WorkReference -->
+    <div class="d-flex">
+      <span
+        class="me-3 flex-fill"
+        *ngIf="applicationModel.workReferenceLinks?.length"
+      >
+        <h6 class="flex-fill">Work Reference:</h6>
+        <p class="ms-4 flex-fill">
+          <!-- loop downloadable files with span -->
+          <span
+            class="me-3 flex-fill"
+            *ngFor="let workLink of applicationModel.workReferenceLinksDto"
+            ><a href="https://{{ workLink }}" target="_blank">
+              {{ workLink }}
+            </a></span
+          >
+        </p>
+      </span>
+    </div>
+    <!-- End WorkReference -->
+    <div *ngIf="showDetailComponent">
+      <!--Start files -->
+      <div class="d-flex">
+        <span class="me-3 flex-fill" *ngIf="applicationModel.files?.length">
+          <h6 class="flex-fill">Files:</h6>
+          <p class="ms-4 flex-fill">
+            <!-- loop downloadable files with span -->
+            <span
+              class="me-3 flex-fill"
+              *ngFor="let file of applicationModel.files"
+              ><a [href]="file.path ? pathToDownload + file.path : '#'">
+                {{
+                  (file.name ? file.name : "") +
+                    "." +
+                    (file.extension ? file.extension : "")
+                }}
+              </a></span
+            >
+          </p>
+        </span>
+      </div>
+      <!-- End Files -->
+
+      <!-- end row-2Colum-of attribute -->
+      <!-- 2nd row-of attribute -->
+      <div class="d-grid">
+        <h6 class="flex-fill">WalletId:</h6>
+        <p class="ms-4">
+          {{ applicationModel.walletId }}
+        </p>
+      </div>
+    </div>
+    <div class="d-grid" *ngIf="applicationModel.questions">
+      <h6 class="flex-fill">Questions:</h6>
+      <p class="ms-4">
+        {{ applicationModel.questions }}
+      </p>
+    </div>
+    <!-- button div -->
+    <div class="d-flex">
+      <button
+        class="btn btn-dark btn-sm me-2 flex-fill"
+        (click)="toggleDetails()"
+      >
+        {{ showDetailComponent ? "Hide" : "Show" }} Details
+      </button>
+      <ng-container
+        *ngIf="this.applicationModel.customerId === this.currentUserId"
+      >
+        <button
+          class="btn btn-dark btn-sm me-2 flex-fill"
+          (click)="choseApplicationWon()"
+        >
+          {{
+            applicationModel.applicationWon
+              ? " Cancel Chose Application "
+              : "Chose Application"
+          }}
+        </button>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="showElementsInListView">
+      <ng-container
+        *ngIf="this.applicationModel.ownerId === this.currentUserId"
+      >
+        <!-- button div update -->
+        <div class="d-flex mt-2">
+          <a
+            class="btn btn-light btn-outline-dark border-3 btn-sm me-2 flex-fill"
+            [routerLink]="[
+              '/gigs',
+              'applications',
+              applicationModel.id,
+              'update'
+            ]"
+          >
+            Update Application
+          </a>
+        </div>
+        <!-- button div Delete -->
+        <div class="d-flex mt-2">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm me-2 flex-fill"
+            (click)="deleteApplication()"
+          >
+            Delete
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div class="d-flex mt-2" *ngIf="errorMsg != null">
+      <div class="alert alert-info flex-fill">
+        {{ errorMsg }}
+      </div>
+    </div>
+  </div>
+  <div class="d-flex mt-2" *ngIf="showElementsInListView">
+    <button
+      type="button"
+      class="btn btn-danger btn-sm me-2 flex-fill"
+      [routerLink]="['/gigs', applicationModel.gigId]"
+    >
+      Back To Gig
+    </button>
+  </div>
+  <hr />
+</div>
+<!-- element of a list ends here  -->
